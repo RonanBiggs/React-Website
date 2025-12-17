@@ -1,0 +1,87 @@
+import Particles from "react-tsparticles";
+import { loadSlim} from "tsparticles-slim";
+import { loadFull } from "tsparticles";
+import { useCallback, useMemo } from "react";
+
+const ParticlesComponent = () => {
+  const options = useMemo(() => {
+    return {
+
+// This ensures the particles fill the entire background
+      fullScreen: {
+        enable: true,
+        zIndex: -1, // Places it behind your text boxes
+      },
+      particles: {
+        collisions: {
+          enable: true,
+          mode: "bounce",
+        },
+        number: {
+          value: 300, // Number of particles
+          density: {
+            enable: true,
+            area: 800,
+          },
+        },
+        color: {
+          value: "#ffffff", // Particle color
+        },
+        shape: {
+          type: "circle",
+        },
+        opacity: {
+          value: 0.5,
+        },
+        size: {
+          value: { min: 3, max: 6 },
+        },
+        links: {
+          enable: false, // Draws lines between nearby particles
+          distance: 150,
+          color: "#ffffff",
+          opacity: 0.4,
+          width: 1,
+        },
+        move: {
+          enable: true,
+          speed: 1,
+          direction: "none",
+          random: false,
+          straight: false,
+          outModes: {
+            default: "bounce",
+          },
+        },
+      },
+      interactivity: {
+        events: {
+          onHover: {
+            enable: true,
+            mode: "repulse", // Lines will 'grab' onto your mouse
+          },
+        },
+        modes: {
+          repulse: {
+            distance: 40,
+            duration: 300,
+          }
+        }
+      },
+      detectRetina: true,
+
+    };
+  }, []);
+
+  const particlesInit = useCallback((engine) => {
+    //loadSlim(engine);
+    loadSlim(engine); //slim is smaller but lacks some plugins like mouse trail
+  }, []);
+
+  return <Particles init={particlesInit} options={options} />;
+};
+
+
+
+
+export default ParticlesComponent;
