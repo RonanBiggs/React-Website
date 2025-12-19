@@ -92,9 +92,31 @@ export const BubblesComponent = () => {
       const ring_distance = 4; // Reduced slightly to ensure 5+ rings fit in the 0-100 scale
       const particles = [];
       const center = 50; // Represents 50% (the center of the div)
-      
+      const manualOptions = {
+        move: {
+          enable: false,
+          // keep them inside ~5px box around origin
+          distance: {
+            horizontal: 1,
+            vertical: 1,
+          },
+          // or just "distance: 5" is also allowed
+          direction: "none",
+          random: true,
+          straight: false,
+          outModes: {
+            default: "none", // they won't get near edges anyway
+          },
+          speed: 1, // how fast they roam *within* that box
+        },
+        collisions: {
+          enable: false, // important to not push each other off-grid
+        },
+      };
       // 1. Add the center particle
-      particles.push({ position: { x: center, y: center } });
+      particles.push({ position: { x: center, y: center },
+        options: manualOptions, });
+
 
       // 2. Generate each ring
       for (let i = 1; i <= count; i++) {
@@ -114,7 +136,7 @@ export const BubblesComponent = () => {
           const end = corners[(s + 1) % 6]; // Connects the last corner back to the first
 
           // Add the corner point
-          particles.push({ position: { x: start.x, y: start.y } });
+          particles.push({ position: { x: start.x, y: start.y }, options: manualOptions,});
 
           // 4. Add middle segments (interpolation)
           // Each side of ring 'i' has 'i-1' points between the corners
@@ -123,7 +145,7 @@ export const BubblesComponent = () => {
             const posX = start.x + (end.x - start.x) * fraction;
             const posY = start.y + (end.y - start.y) * fraction;
             
-            particles.push({ position: { x: posX, y: posY } });
+            particles.push({ position: { x: posX, y: posY }, options: manualOptions,});
           }
         }
       }
@@ -137,8 +159,22 @@ export const BubblesComponent = () => {
         enable: true,
       },
       particles: {
+        move: {
+        enable: false,
+        speed: 1,           // The intensity of the shake
+        straight: false,
+        random: false,
+        direction: "none",
+        outModes: {
+          default: "bounce",   // Crucial: stops them from drifting
+        },
+        vibrate: true,
+  
+      },
+
+        
         collisions: {
-          enable: true,
+          enable: false,
           mode: "bounce",
         },
         number: {
@@ -155,16 +191,6 @@ export const BubblesComponent = () => {
         },
         size: {
           value: { min: 9, max: 9 },
-        },
-        move: {
-          enable: false,
-          speed: 1,
-          direction: "none",
-          random: false,
-          straight: false,
-          outModes: {
-            default: "bounce",
-          },
         },
       },
       interactivity: {
